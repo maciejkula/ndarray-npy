@@ -27,9 +27,9 @@ extern crate byteorder;
 extern crate ndarray;
 
 use byteorder::{BigEndian, ByteOrder, LittleEndian, NativeEndian, WriteBytesExt};
-use std::io;
 use ndarray::prelude::*;
 use ndarray::Data;
+use std::io;
 
 static MAGIC_VALUE: &[u8] = b"\x93NUMPY";
 /// npy format Version 1.0
@@ -52,12 +52,13 @@ macro_rules! impl_dtype {
                 w.$byteorder_fn::<B>(self)
             }
         }
-    }
+    };
 }
 
+impl_dtype!(i32, "i4", write_i32);
+impl_dtype!(i64, "i8", write_i64);
 impl_dtype!(f32, "f4", write_f32);
 impl_dtype!(f64, "f8", write_f64);
-
 
 trait NumpyEndian {
     fn endian_symbol() -> &'static str;
@@ -135,7 +136,6 @@ where
 
     Ok(())
 }
-
 
 // #[cfg(test)]
 // mod tests {
